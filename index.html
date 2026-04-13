@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kindred — You don't have to heal alone</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #FAF8F5;
+    color: #2C2825;
+  }
+
+  /* NAV */
+  nav {
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    letter-spacing: 6px;
+    font-weight: 300;
+    color: #2C2825;
+  }
+
+  .nav-logo span { color: #C9877A; }
+
+  .nav-cta {
+    background: #2C2825;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 24px;
+    font-size: 13px;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 40px;
+    gap: 24px;
+  }
+
+  .hero-heart { font-size: 48px; }
+
+  .hero-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    letter-spacing: 16px;
+    color: #2C2825;
+  }
+
+  .hero-tagline {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #ADA8A4;
+  }
+
+  .hero-divider {
+    width: 40px;
+    height: 1px;
+    background: #C9877A;
+    opacity: 0.6;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1.4;
+    max-width: 600px;
+    color: #2C2825;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: #6B6460;
+    line-height: 1.7;
+    max-width: 500px;
+  }
+
+  /* WAITLIST FORM */
+  .waitlist-form {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .waitlist-input {
+    padding: 14px 24px;
+    border-radius: 32px;
+    border: 1px solid rgba(0,0,0,0.1);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    color: #2C2825;
+    width: 280px;
+    outline: none;
+  }
+
+  .waitlist-btn {
+    padding: 14px 32px;
+    border-radius: 32px;
+    background: #C9877A;
+    color: white;
+    border: none;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .waitlist-btn:hover { background: #A05C52; }
+
+  .hero-privacy {
+    font-size: 12px;
+    color: #ADA8A4;
+  }
+
+  /* STORY */
+  .story {
+    background: #2C2825;
+    padding: 80px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .story-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .story-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    font-style: italic;
+    color: white;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  .story-author {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+  }
+
+  /* FEATURES */
+  .features {
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .features-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #ADA8A4;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .feature-icon { font-size: 32px; margin-bottom: 16px; }
+
+  .feature-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #2C2825;
+    margin-bottom: 8px;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: #6B6460;
+    line-height: 1.7;
+  }
+
+  /* STATS */
+  .stats {
+    background: #F2E8E1;
+    padding: 60px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    flex-wrap: wrap;
+  }
+
+  .stat { text-align: center; }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: #2C2825;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ADA8A4;
+  }
+
+  /* BOTTOM CTA */
+  .bottom-cta {
+    padding: 80px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .bottom-cta h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: #2C2825;
+    max-width: 600px;
+    line-height: 1.3;
+  }
+
+  .bottom-cta p {
+    font-size: 16px;
+    color: #6B6460;
+    max-width: 400px;
+    line-height: 1.7;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #2C2825;
+    padding: 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    letter-spacing: 6px;
+    color: white;
+    font-weight: 300;
+  }
+
+  .footer-logo span { color: #C9877A; }
+
+  .footer-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* SUCCESS STATE */
+  .success-msg {
+    display: none;
+    background: #EEF4F1;
+    color: #7A9E8A;
+    padding: 14px 24px;
+    border-radius: 32px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">KIND<span>R</span>ED</div>
+  <a href="#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-heart">🤍</div>
+  <div class="hero-logo">KINDRED</div>
+  <div class="hero-tagline">You don't have to heal alone</div>
+  <div class="hero-divider"></div>
+  <h1 class="hero-headline">
+    The heartbreak recovery app built from a broken heart.
+  </h1>
+  <p class="hero-sub">
+    An AI companion that listens at 2am. An anonymous community that truly understands. Tools that prove you're healing — even when it doesn't feel like it.
+  </p>
+
+  <!-- WAITLIST -->
+  <div id="waitlist" class="waitlist-form">
+    <input type="email" class="waitlist-input" placeholder="Your email address" id="emailInput" />
+    <button class="waitlist-btn" onclick="joinWaitlist()">Join the waitlist →</button>
+  </div>
+  <div class="success-msg" id="successMsg">
+    ✓ You're on the list! We'll reach out when Kindred launches.
+  </div>
+  <p class="hero-privacy">🔒 No spam. No sharing. Just Kindred.</p>
+</section>
+
+<!-- STORY -->
+<section class="story">
+  <div class="story-label">Why Kindred exists</div>
+  <div class="story-quote">
+    "I built Kindred the night my engagement ended — heartbroken, alone, and with nowhere to turn. Because healing doesn't happen in isolation. It happens in connection."
+  </div>
+  <div class="story-author">— RICK VILMA, FOUNDER</div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat">
+    <div class="stat-num">300K</div>
+    <div class="stat-label">breakups daily</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">85%</div>
+    <div class="stat-label">of people will experience heartbreak</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">11</div>
+    <div class="stat-label">weeks average recovery</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">0</div>
+    <div class="stat-label">apps built from lived experience</div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="features-label">Everything you need to heal</div>
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <div class="feature-name">Kira — Your AI Companion</div>
+      <div class="feature-desc">A warm, caring AI best friend available 24/7. She remembers your story, understands your pain, and never judges. Available at 2am when the world is asleep.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🤝</div>
+      <div class="feature-name">The Circle</div>
+      <div class="feature-desc">Anonymous community of people going through it right now. No real names. No judgment. Just real humans who truly understand because they're living it too.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🆘</div>
+      <div class="feature-name">Panic Button</div>
+      <div class="feature-desc">About to text your ex at midnight? The SOS button stops the spiral with breathing exercises, affirmations, and an unsent message tool.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📓</div>
+      <div class="feature-name">Private Journal</div>
+      <div class="feature-desc">Guided prompts that adapt to your healing stage. Write what you can't say out loud. Private, safe, and just for you.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <div class="feature-name">Healing Tracker</div>
+      <div class="feature-desc">Visual proof you're moving forward — even when it doesn't feel like it. Mood trends, milestones, and weekly insights from Kira.</div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <div class="feature-name">Radical Privacy</div>
+      <div class="feature-desc">Zero public profile. Completely anonymous. No real name, no photo, no trace. Just you and your healing journey.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <h2>You deserve to heal. And you don't have to do it alone.</h2>
+  <p>Kindred is coming soon. Join the waitlist and be first to know when we launch.</p>
+  <div class="waitlist-form">
+    <input type="email" class="waitlist-input" placeholder="Your email address" id="emailInput2" />
+    <button class="waitlist-btn" onclick="joinWaitlist2()">Join the waitlist →</button>
+  </div>
+  <div class="success-msg" id="successMsg2">
+    ✓ You're on the list! We'll reach out when Kindred launches.
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">KIND<span>R</span>ED</div>
+  <div class="footer-text">Built from a broken heart. For every broken heart. © 2026 Kindred</div>
+</footer>
+
+<script>
+  function joinWaitlist() {
+    const email = document.getElementById('emailInput').value;
+    if (email && email.includes('@')) {
+      document.querySelector('.waitlist-form').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    }
+  }
+
+  function joinWaitlist2() {
+    const email = document.getElementById('emailInput2').value;
+    if (email && email.includes('@')) {
+      document.querySelector('.bottom-cta .waitlist-form').style.display = 'none';
+      document.getElementById('successMsg2').style.display = 'block';
+    }
+  }
+</script>
+
+</body>
+</html>
