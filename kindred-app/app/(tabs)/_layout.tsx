@@ -1,35 +1,49 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Text } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
+        tabBarStyle: {
+          backgroundColor: '#FFFFFF',
+          borderTopColor: 'rgba(0,0,0,0.05)',
+          height: 60,
+          paddingBottom: 8,
+        },
+        tabBarActiveTintColor: '#C9877A',
+        tabBarInactiveTintColor: '#ADA8A4',
+        tabBarLabelStyle: {
+          fontSize: 10,
+          letterSpacing: 0.5,
+        },
       }}>
+
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: () => <Text style={{fontSize:20}}>🏠</Text>,
         }}
       />
+
+      <Tabs.Screen
+        name="kira"
+        options={{
+          title: 'Kira',
+          tabBarIcon: () => <Text style={{fontSize:20}}>💬</Text>,
+        }}
+      />
+
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Circle',
+          tabBarIcon: () => <Text style={{fontSize:20}}>🤝</Text>,
         }}
       />
+
     </Tabs>
   );
 }
