@@ -37,6 +37,14 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
+        name="panic"
+        options={{
+          title: 'SOS',
+          tabBarIcon: () => <Text style={{fontSize:18}}>🆘</Text>,
+        }}
+      />
+
+      <Tabs.Screen
         name="journal"
         options={{
           title: 'Journal',
