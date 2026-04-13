@@ -1,24 +1,65 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Tabs } from 'expo-router';
+import { Text } from 'react-native';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
+export default function TabLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#FFFFFF',
+          borderTopColor: 'rgba(0,0,0,0.05)',
+          height: 60,
+          paddingBottom: 8,
+        },
+        tabBarActiveTintColor: '#C9877A',
+        tabBarInactiveTintColor: '#ADA8A4',
+        tabBarLabelStyle: {
+          fontSize: 10,
+          letterSpacing: 0.5,
+        },
+      }}>
+
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: () => <Text style={{fontSize:18}}>🏠</Text>,
+        }}
+      />
+
+      <Tabs.Screen
+        name="kira"
+        options={{
+          title: 'Kira',
+          tabBarIcon: () => <Text style={{fontSize:18}}>💬</Text>,
+        }}
+      />
+
+      <Tabs.Screen
+        name="journal"
+        options={{
+          title: 'Journal',
+          tabBarIcon: () => <Text style={{fontSize:18}}>📓</Text>,
+        }}
+      />
+
+      <Tabs.Screen
+        name="mood"
+        options={{
+          title: 'Healing',
+          tabBarIcon: () => <Text style={{fontSize:18}}>📈</Text>,
+        }}
+      />
+
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Circle',
+          tabBarIcon: () => <Text style={{fontSize:18}}>🤝</Text>,
+        }}
+      />
+
+    </Tabs>
   );
 }
