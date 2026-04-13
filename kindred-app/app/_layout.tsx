@@ -21,6 +21,14 @@ export default function TabLayout() {
       }}>
 
       <Tabs.Screen
+        name="onboarding"
+        options={{
+          title: 'Welcome',
+          tabBarIcon: () => <Text style={{fontSize:18}}>🤍</Text>,
+        }}
+      />
+
+      <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
