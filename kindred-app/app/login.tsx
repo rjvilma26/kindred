@@ -10,15 +10,35 @@ export default function LoginScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
 
   async function handleAuth() {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter your email and password');
+      return;
+    }
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters');
+      return;
+    }
     setLoading(true);
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) Alert.alert('Error', error.message);
-      else Alert.alert('Check your email', 'We sent you a confirmation link 💙');
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        Alert.alert('Error', error.message);
+      } else if (data.user) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) {
+          Alert.alert('Account created!', 'Please sign in with your new password.');
+          setIsSignUp(false);
+        } else {
+          router.replace('/(tabs)');
+        }
+      }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) Alert.alert('Error', error.message);
-      else router.replace('/(tabs)');
+      if (error) {
+        Alert.alert('Error', error.message);
+      } else {
+        router.replace('/(tabs)');
+      }
     }
     setLoading(false);
   }
@@ -28,7 +48,6 @@ export default function LoginScreen() {
       <Text style={styles.logo}>KINDRED</Text>
       <Text style={styles.title}>{isSignUp ? 'Create your account' : 'Welcome back'}</Text>
       <Text style={styles.subtitle}>🔒 Private. Safe. Just for you.</Text>
-
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -40,17 +59,15 @@ export default function LoginScreen() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Password (min 6 characters)"
         placeholderTextColor="#999"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-
       <TouchableOpacity style={styles.btn} onPress={handleAuth} disabled={loading}>
         <Text style={styles.btnText}>{loading ? 'Please wait...' : isSignUp ? 'Sign up' : 'Sign in'}</Text>
       </TouchableOpacity>
-
       <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
         <Text style={styles.toggle}>
           {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
