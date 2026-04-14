@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { supabase } from '../../lib/supabase';
 
 export default function HomeScreen() {
   return (
