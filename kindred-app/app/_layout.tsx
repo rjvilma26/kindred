@@ -1,91 +1,32 @@
-import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Stack } from 'expo-router';
+import { supabase } from '../lib/supabase';
+import { Session } from '@supabase/supabase-js';
 
-export default function TabLayout() {
+export default function RootLayout() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
+  if (loading) return null;
+
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderTopColor: 'rgba(0,0,0,0.05)',
-          height: 60,
-          paddingBottom: 8,
-        },
-        tabBarActiveTintColor: '#C9877A',
-        tabBarInactiveTintColor: '#ADA8A4',
-        tabBarLabelStyle: {
-          fontSize: 10,
-          letterSpacing: 0.5,
-        },
-      }}>
-
-      <Tabs.Screen
-        name="onboarding"
-        options={{
-          title: 'Welcome',
-          tabBarIcon: () => <Text style={{fontSize:18}}>🤍</Text>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: () => <Text style={{fontSize:18}}>🏠</Text>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="kira"
-        options={{
-          title: 'Kira',
-          tabBarIcon: () => <Text style={{fontSize:18}}>💬</Text>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="panic"
-        options={{
-          title: 'SOS',
-          tabBarIcon: () => <Text style={{fontSize:18}}>🆘</Text>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="journal"
-        options={{
-          title: 'Journal',
-          tabBarIcon: () => <Text style={{fontSize:18}}>📓</Text>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="mood"
-        options={{
-          title: 'Healing',
-          tabBarIcon: () => <Text style={{fontSize:18}}>📈</Text>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Circle',
-          tabBarIcon: () => <Text style={{fontSize:18}}>🤝</Text>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="(tabs)"
-        options={{ href: null }}
-      />
-
-      <Tabs.Screen
-        name="modal"
-        options={{ href: null }}
-      />
-
-    </Tabs>
+    <Stack screenOptions={{ headerShown: false }}>
+      {session ? (
+        <Stack.Screen name="(tabs)" />
+      ) : (
+        <Stack.Screen name="login" />
+      )}
+    </Stack>
   );
 }
