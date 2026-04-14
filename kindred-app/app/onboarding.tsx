@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { router } from 'expo-router';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
 const steps = [
@@ -53,7 +54,7 @@ export default function OnboardingScreen() {
           <Text style={styles.doneGoalNum}>{goal}</Text>
           <Text style={styles.doneGoalDays}>days no contact</Text>
         </View>
-        <TouchableOpacity style={styles.startBtn}>
+        <TouchableOpacity style={styles.startBtn} onPress={() => router.replace('/(tabs)')}>>
           <Text style={styles.startBtnText}>Start healing →</Text>
         </TouchableOpacity>
       </View>

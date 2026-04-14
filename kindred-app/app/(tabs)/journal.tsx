@@ -36,7 +36,7 @@ export default function JournalScreen() {
       <View style={styles.header}>
         <Text style={styles.logo}>KINDRED</Text>
         <Text style={styles.title}>Your Journal</Text>
-        <Text style={styles.subtitle}>Private. Safe. Just for you.</Text>
+        <Text style={styles.subtitle}>🔒 Private. Safe. Just for you.</Text>
       </View>
 
       {/* Prompt Card */}
