@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { supabase } from '../../lib/supabase';
@@ -8,12 +9,46 @@ async function handleSignOut() {
 }
 
 export default function HomeScreen() {
+  const [profile, setProfile] = useState(null);
+  const [streak, setStreak] = useState(0);
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const loadProfile = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      if (data) {
+        setProfile(data);
+        const start = new Date(data.no_contact_start);
+        const today = new Date();
+        const days = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
+        setStreak(days);
+      }
+    }
+  };
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  const percent = profile ? Math.round((streak / profile.goal_days) * 100) : 0;
+
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.logo}>KINDRED</Text>
-        <Text style={styles.greeting}>Good evening 🤍</Text>
-        <Text style={styles.day}>Day 1 of your journey</Text>
+        <Text style={styles.greeting}>{getGreeting()} {profile?.name} 🤍</Text>
+        <Text style={styles.day}>Day {streak} of your journey</Text>
         <TouchableOpacity onPress={handleSignOut} style={styles.signOut}>
           <Text style={styles.signOutText}>Sign out</Text>
         </TouchableOpacity>
@@ -21,11 +56,11 @@ export default function HomeScreen() {
       <View style={styles.streakCard}>
         <View>
           <Text style={styles.streakLabel}>NO CONTACT STREAK</Text>
-          <Text style={styles.streakNum}>1</Text>
-          <Text style={styles.streakDays}>day strong</Text>
+          <Text style={styles.streakNum}>{streak}</Text>
+          <Text style={styles.streakDays}>{streak === 1 ? 'day' : 'days'} strong</Text>
         </View>
         <View style={styles.streakRing}>
-          <Text style={styles.streakPercent}>3%</Text>
+          <Text style={styles.streakPercent}>{percent}%</Text>
         </View>
       </View>
       <View style={styles.grid}>
