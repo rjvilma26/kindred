@@ -1,54 +1,56 @@
 import { useEffect, useState } from 'react';
 import { Stack, router } from 'expo-router';
 import { supabase } from '../lib/supabase';
-import { Session } from '@supabase/supabase-js';
 
 export default function RootLayout() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
+  const [session, setSession] = useState(null);
+  const [hasProfile, setHasProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [navigated, setNavigated] = useState(false);
 
-  const checkProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('id', userId)
-      .maybeSingle();
-    console.log('Profile check:', data, error);
-    setHasProfile(!!data);
+  const checkProfile = async (userId) => {
+    const { data } = await supabase.from('profiles').select('id').eq('id', userId).maybeSingle();
+    return !!data;
   };
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       if (session) {
-        await checkProfile(session.user.id);
-      } else {
-        setHasProfile(null);
+        const profile = await checkProfile(session.user.id);
+        setHasProfile(profile);
       }
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      if (session) {
-        await checkProfile(session.user.id);
-      } else {
+    supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (_event === 'SIGNED_OUT') {
+        setSession(null);
         setHasProfile(null);
-        setLoading(false);
+        setNavigated(false);
+        router.replace('/login');
+      } else if (_event === 'SIGNED_IN' && session) {
+        setSession(session);
+        const profile = await checkProfile(session.user.id);
+        if (!profile) {
+          router.replace('/onboarding');
+        } else {
+          router.replace('/(tabs)');
+        }
       }
     });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || navigated) return;
     if (!session) {
+      setNavigated(true);
       router.replace('/login');
-    } else if (!hasProfile) {
+    } else if (hasProfile === false) {
+      setNavigated(true);
       router.replace('/onboarding');
-    } else {
+    } else if (hasProfile === true) {
+      setNavigated(true);
       router.replace('/(tabs)');
     }
   }, [session, hasProfile, loading]);
