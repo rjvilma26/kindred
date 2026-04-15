@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { supabase } from '../lib/supabase';
 import { Session } from '@supabase/supabase-js';
 
@@ -8,46 +8,56 @@ export default function RootLayout() {
   const [hasProfile, setHasProfile] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const checkProfile = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .maybeSingle();
+    console.log('Profile check:', data, error);
+    setHasProfile(!!data);
+  };
+
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       if (session) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('id', session.user.id)
-          .single();
-        setHasProfile(!!data);
+        await checkProfile(session.user.id);
+      } else {
+        setHasProfile(null);
       }
       setLoading(false);
     });
 
-    supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('id', session.user.id)
-          .single();
-        setHasProfile(!!data);
+        await checkProfile(session.user.id);
       } else {
         setHasProfile(null);
+        setLoading(false);
       }
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) return null;
+  useEffect(() => {
+    if (loading) return;
+    if (!session) {
+      router.replace('/login');
+    } else if (!hasProfile) {
+      router.replace('/onboarding');
+    } else {
+      router.replace('/(tabs)');
+    }
+  }, [session, hasProfile, loading]);
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {!session ? (
-        <Stack.Screen name="login" />
-      ) : !hasProfile ? (
-        <Stack.Screen name="onboarding" />
-      ) : (
-        <Stack.Screen name="(tabs)" />
-      )}
+      <Stack.Screen name="login" />
+      <Stack.Screen name="onboarding" />
+      <Stack.Screen name="(tabs)" />
     </Stack>
   );
 }
