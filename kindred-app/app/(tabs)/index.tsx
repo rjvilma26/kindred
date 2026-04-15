@@ -91,6 +91,14 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
+      <TouchableOpacity style={styles.sosCard} onPress={() => router.push('/(tabs)/panic')}>
+        <Text style={styles.sosIcon}>🆘</Text>
+        <View>
+          <Text style={styles.sosTitle}>SOS — Panic Button</Text>
+          <Text style={styles.sosSub}>Tap when you need immediate support</Text>
+        </View>
+      </TouchableOpacity>
+
       <View style={styles.kiraCard}>
         <Text style={styles.kiraName}>Kira 💙</Text>
         <Text style={styles.kiraMsg}>"Hey. I know today might be hard. I'm right here whenever you need to talk."</Text>
@@ -121,6 +129,10 @@ const styles = StyleSheet.create({
   cardIcon: { fontSize: 22, marginBottom: 4 },
   cardTitle: { fontSize: 13, fontWeight: '500', color: '#2C2825' },
   cardSub: { fontSize: 11, color: '#ADA8A4' },
+  sosCard: { backgroundColor: '#FFF0EE', borderRadius: 16, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 16, borderWidth: 1, borderColor: '#F2D0CC' },
+  sosIcon: { fontSize: 32 },
+  sosTitle: { fontSize: 14, fontWeight: '600', color: '#C9877A', marginBottom: 2 },
+  sosSub: { fontSize: 12, color: '#ADA8A4' },
   kiraCard: { backgroundColor: '#F2E8E1', borderRadius: 16, padding: 18, gap: 8 },
   kiraName: { fontSize: 12, fontWeight: '500', color: '#C9877A', letterSpacing: 1 },
   kiraMsg: { fontSize: 13, color: '#6B6460', lineHeight: 20, fontStyle: 'italic' },
