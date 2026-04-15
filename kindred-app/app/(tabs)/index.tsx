@@ -53,6 +53,7 @@ export default function HomeScreen() {
           <Text style={styles.signOutText}>Sign out</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.streakCard}>
         <View>
           <Text style={styles.streakLabel}>NO CONTACT STREAK</Text>
@@ -63,28 +64,33 @@ export default function HomeScreen() {
           <Text style={styles.streakPercent}>{percent}%</Text>
         </View>
       </View>
+
       <View style={styles.grid}>
-        <TouchableOpacity style={[styles.card, styles.roseCard]}>
+        <TouchableOpacity style={[styles.card, styles.roseCard]} onPress={() => router.push('/(tabs)/kira')}>
           <Text style={styles.cardIcon}>💬</Text>
           <Text style={styles.cardTitle}>Talk to Kira</Text>
           <Text style={styles.cardSub}>She's here now</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.card, styles.greenCard]}>
+
+        <TouchableOpacity style={[styles.card, styles.greenCard]} onPress={() => router.push('/(tabs)/explore')}>
           <Text style={styles.cardIcon}>🤝</Text>
           <Text style={styles.cardTitle}>Your Circle</Text>
           <Text style={styles.cardSub}>Community</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+
+        <TouchableOpacity style={styles.card} onPress={() => router.push('/(tabs)/journal')}>
           <Text style={styles.cardIcon}>📓</Text>
           <Text style={styles.cardTitle}>Journal</Text>
           <Text style={styles.cardSub}>Today's prompt</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+
+        <TouchableOpacity style={styles.card} onPress={() => router.push('/(tabs)/mood')}>
           <Text style={styles.cardIcon}>📈</Text>
           <Text style={styles.cardTitle}>Your Mood</Text>
           <Text style={styles.cardSub}>Track progress</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.kiraCard}>
         <Text style={styles.kiraName}>Kira 💙</Text>
         <Text style={styles.kiraMsg}>"Hey. I know today might be hard. I'm right here whenever you need to talk."</Text>
