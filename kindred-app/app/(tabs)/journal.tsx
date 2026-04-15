@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { supabase } from '../../lib/supabase';
 
 const prompts = [
   "What's one thing you're feeling right now that you haven't said out loud?",
@@ -16,11 +17,26 @@ export default function JournalScreen() {
   const [entry, setEntry] = useState('');
   const [saved, setSaved] = useState(false);
   const [promptIndex, setPromptIndex] = useState(0);
+  const [saving, setSaving] = useState(false);
 
-  const saveEntry = () => {
+  const saveEntry = async () => {
     if (!entry.trim()) return;
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setSaving(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { error } = await supabase.from('journal_entries').insert({
+        user_id: user.id,
+        prompt: prompts[promptIndex],
+        content: entry,
+      });
+      if (error) {
+        Alert.alert('Error', 'Could not save entry. Please try again.');
+      } else {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      }
+    }
+    setSaving(false);
   };
 
   const nextPrompt = () => {
@@ -31,15 +47,12 @@ export default function JournalScreen() {
 
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
-
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.logo}>KINDRED</Text>
         <Text style={styles.title}>Your Journal</Text>
         <Text style={styles.subtitle}>🔒 Private. Safe. Just for you.</Text>
       </View>
 
-      {/* Prompt Card */}
       <View style={styles.promptCard}>
         <Text style={styles.promptLabel}>TODAY'S PROMPT</Text>
         <Text style={styles.promptText}>{prompts[promptIndex]}</Text>
@@ -48,7 +61,6 @@ export default function JournalScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Journal Entry */}
       <View style={styles.entryContainer}>
         <TextInput
           style={styles.entryInput}
@@ -61,17 +73,16 @@ export default function JournalScreen() {
         />
       </View>
 
-      {/* Save Button */}
       <TouchableOpacity
         style={[styles.saveBtn, saved && styles.savedBtn]}
         onPress={saveEntry}
+        disabled={saving}
       >
         <Text style={styles.saveBtnText}>
-          {saved ? '✓ Saved' : 'Save Entry'}
+          {saving ? 'Saving...' : saved ? '✓ Saved to your journal' : 'Save Entry'}
         </Text>
       </TouchableOpacity>
 
-      {/* Unsent Message */}
       <View style={styles.unsentCard}>
         <Text style={styles.unsentTitle}>💌 Unsent Message</Text>
         <Text style={styles.unsentSub}>
@@ -81,7 +92,6 @@ export default function JournalScreen() {
           <Text style={styles.unsentBtnText}>Write unsent message</Text>
         </TouchableOpacity>
       </View>
-
     </ScrollView>
   );
 }
@@ -90,75 +100,22 @@ const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: '#FAF8F5' },
   container: { padding: 24, gap: 20, paddingBottom: 40 },
   header: { marginTop: 20, marginBottom: 8 },
-  logo: {
-    fontSize: 12, letterSpacing: 4,
-    color: '#ADA8A4', marginBottom: 8,
-  },
-  title: {
-    fontSize: 28, color: '#2C2825',
-    fontWeight: '300', marginBottom: 4,
-  },
+  logo: { fontSize: 12, letterSpacing: 4, color: '#ADA8A4', marginBottom: 8 },
+  title: { fontSize: 28, color: '#2C2825', fontWeight: '300', marginBottom: 4 },
   subtitle: { fontSize: 13, color: '#ADA8A4' },
-  promptCard: {
-    backgroundColor: '#2C2825',
-    borderRadius: 20, padding: 24, gap: 12,
-  },
-  promptLabel: {
-    fontSize: 9, letterSpacing: 3,
-    color: 'rgba(255,255,255,0.4)',
-    textTransform: 'uppercase',
-  },
-  promptText: {
-    fontSize: 16, color: 'white',
-    fontWeight: '300', lineHeight: 24,
-    fontStyle: 'italic',
-  },
+  promptCard: { backgroundColor: '#2C2825', borderRadius: 20, padding: 24, gap: 12 },
+  promptLabel: { fontSize: 9, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' },
+  promptText: { fontSize: 16, color: 'white', fontWeight: '300', lineHeight: 24, fontStyle: 'italic' },
   newPromptBtn: { alignSelf: 'flex-start' },
   newPromptText: { fontSize: 12, color: '#D4A090' },
-  entryContainer: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 20,
-    minHeight: 200,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  entryInput: {
-    fontSize: 15, color: '#2C2825',
-    lineHeight: 24, minHeight: 180,
-  },
-  saveBtn: {
-    backgroundColor: '#C9877A',
-    borderRadius: 16, padding: 16,
-    alignItems: 'center',
-  },
+  entryContainer: { backgroundColor: 'white', borderRadius: 20, padding: 20, minHeight: 200, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 8, elevation: 2 },
+  entryInput: { fontSize: 15, color: '#2C2825', lineHeight: 24, minHeight: 180 },
+  saveBtn: { backgroundColor: '#C9877A', borderRadius: 16, padding: 16, alignItems: 'center' },
   savedBtn: { backgroundColor: '#7A9E8A' },
-  saveBtnText: {
-    color: 'white', fontSize: 15,
-    fontWeight: '500', letterSpacing: 1,
-  },
-  unsentCard: {
-    backgroundColor: '#F2E8E1',
-    borderRadius: 20, padding: 20, gap: 8,
-  },
-  unsentTitle: {
-    fontSize: 15, fontWeight: '500',
-    color: '#2C2825',
-  },
-  unsentSub: {
-    fontSize: 13, color: '#6B6460',
-    lineHeight: 20,
-  },
-  unsentBtn: {
-    backgroundColor: 'white',
-    borderRadius: 12, padding: 12,
-    alignItems: 'center', marginTop: 4,
-  },
-  unsentBtnText: {
-    fontSize: 13, color: '#C9877A',
-    fontWeight: '500',
-  },
+  saveBtnText: { color: 'white', fontSize: 15, fontWeight: '500', letterSpacing: 1 },
+  unsentCard: { backgroundColor: '#F2E8E1', borderRadius: 20, padding: 20, gap: 8 },
+  unsentTitle: { fontSize: 15, fontWeight: '500', color: '#2C2825' },
+  unsentSub: { fontSize: 13, color: '#6B6460', lineHeight: 20 },
+  unsentBtn: { backgroundColor: 'white', borderRadius: 12, padding: 12, alignItems: 'center', marginTop: 4 },
+  unsentBtnText: { fontSize: 13, color: '#C9877A', fontWeight: '500' },
 });
